@@ -5,30 +5,81 @@ from datetime import datetime
 app = Flask(__name__)
 
 SYMPTOM_RULES = {
+    # RED — emergency
     "chest pain": ("Red", "Seek emergency care immediately. Keep the person calm and seated upright."),
     "breathing difficulty": ("Red", "Seek emergency care immediately. Loosen tight clothing, keep person upright."),
+    "difficulty breathing": ("Red", "Seek emergency care immediately. Loosen tight clothing, keep person upright."),
     "bleeding": ("Red", "Apply firm pressure to the wound with a clean cloth. Seek immediate care if bleeding doesn't stop."),
+    "heavy bleeding": ("Red", "Apply firm pressure to the wound with a clean cloth. Seek immediate care if bleeding doesn't stop."),
     "snake bite": ("Red", "Keep the person still and calm. Do not cut or suck the wound. Seek emergency care immediately."),
-    "pregnancy": ("Red", "Seek immediate medical attention for any pregnancy complications."),
+    "pregnancy complication": ("Red", "Seek immediate medical attention for any pregnancy complications."),
+    "unconscious": ("Red", "Check breathing. Keep the person on their side. Seek emergency care immediately."),
+    "unconsciousness": ("Red", "Check breathing. Keep the person on their side. Seek emergency care immediately."),
+    "seizure": ("Red", "Do not restrain the person. Clear the area of hard objects. Seek emergency care after the seizure stops."),
+    "severe burn": ("Red", "Cool the burn with running water for 20 minutes. Do not apply ice or ointments. Seek emergency care."),
+    "poisoning": ("Red", "Do not induce vomiting unless told to. Seek emergency care immediately with the substance container if possible."),
+    "fracture": ("Red", "Do not move the injured area. Support and immobilize it. Seek emergency care immediately."),
+
+    # YELLOW — needs attention soon
     "high fever": ("Yellow", "Give fluids, use a cool cloth on forehead. See a doctor if fever persists beyond a day."),
     "fever": ("Yellow", "Rest, stay hydrated, monitor temperature. See a doctor if it worsens."),
     "stomach pain": ("Yellow", "Rest, avoid solid food temporarily, stay hydrated. See a doctor if pain is severe or persistent."),
+    "abdominal pain": ("Yellow", "Rest, avoid solid food temporarily, stay hydrated. See a doctor if pain is severe or persistent."),
     "injury": ("Yellow", "Clean the wound, apply a bandage. See a doctor if there's swelling or you suspect a fracture."),
+    "vomiting": ("Yellow", "Sip small amounts of water frequently. See a doctor if vomiting persists beyond a day."),
+    "diarrhea": ("Yellow", "Drink oral rehydration solution (ORS) or salted water. See a doctor if it persists beyond 2 days."),
+    "dehydration": ("Yellow", "Drink ORS or water with a pinch of salt and sugar. See a doctor if symptoms worsen."),
+    "body ache": ("Yellow", "Rest and stay hydrated. See a doctor if pain is severe or accompanied by fever."),
+    "dizziness": ("Yellow", "Sit or lie down immediately. Stay hydrated. See a doctor if it persists or recurs."),
+    "eye infection": ("Yellow", "Avoid touching or rubbing the eye. Keep it clean. See a doctor if redness or pain worsens."),
+    "skin rash": ("Yellow", "Avoid scratching. Keep the area clean and dry. See a doctor if it spreads or worsens."),
+
+    # GREEN — mild, routine
     "cough": ("Green", "Stay hydrated, rest. See a doctor if cough persists more than a week."),
     "headache": ("Green", "Rest in a quiet, dark room. Stay hydrated. See a doctor if severe or persistent."),
+    "cold": ("Green", "Rest, stay hydrated, warm fluids may help. See a doctor if symptoms worsen or persist."),
+    "sore throat": ("Green", "Warm salt water gargle, stay hydrated. See a doctor if it persists more than a few days."),
+    "mild fatigue": ("Green", "Rest and ensure adequate sleep and nutrition. See a doctor if fatigue is persistent or severe."),
+    "minor cut": ("Green", "Clean with water, apply a bandage. See a doctor if it doesn't heal or shows signs of infection."),
 }
 
 HINDI_TO_ENGLISH_SYMPTOMS = {
+    # Red
     "सीने में दर्द": "chest pain",
-    "बुखार": "fever",
-    "तेज बुखार": "high fever",
-    "खांसी": "cough",
+    "छाती में दर्द": "chest pain",
     "सांस लेने में तकलीफ": "breathing difficulty",
+    "सांस फूलना": "breathing difficulty",
     "खून बह रहा है": "bleeding",
+    "बहुत खून बह रहा है": "heavy bleeding",
     "सांप ने काटा": "snake bite",
+    "बेहोश": "unconscious",
+    "बेहोशी": "unconsciousness",
+    "दौरा पड़ना": "seizure",
+    "गंभीर जलना": "severe burn",
+    "जहर खा लिया": "poisoning",
+    "हड्डी टूटना": "fracture",
+
+    # Yellow
+    "तेज बुखार": "high fever",
+    "बुखार": "fever",
     "पेट दर्द": "stomach pain",
-    "सिर दर्द": "headache",
+    "पेट में दर्द": "abdominal pain",
     "चोट": "injury",
+    "उल्टी": "vomiting",
+    "दस्त": "diarrhea",
+    "पानी की कमी": "dehydration",
+    "शरीर में दर्द": "body ache",
+    "चक्कर आना": "dizziness",
+    "आंख में संक्रमण": "eye infection",
+    "त्वचा पर चकत्ते": "skin rash",
+
+    # Green
+    "खांसी": "cough",
+    "सिर दर्द": "headache",
+    "जुकाम": "cold",
+    "गले में खराश": "sore throat",
+    "हल्की थकान": "mild fatigue",
+    "छोटा घाव": "minor cut",
 }
 
 def translate_to_english(text):
