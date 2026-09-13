@@ -37,3 +37,31 @@ button {
 button:hover {
     background-color: #237032;
 }
+
+.urgency-red {
+    color: white;
+    background-color: #d63031;
+    padding: 10px;
+    border-radius: 5px;
+}
+
+.urgency-yellow {
+    color: black;
+    background-color: #fdcb6e;
+    padding: 10px;
+    border-radius: 5px;
+}
+
+.urgency-green {
+    color: white;
+    background-color: #00b894;
+    padding: 10px;
+    border-radius: 5px;
+}
+
+.urgency-unknown {
+    color: white;
+    background-color: #636e72;
+    padding: 10px;
+    border-radius: 5px;
+}
