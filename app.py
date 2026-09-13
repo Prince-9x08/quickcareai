@@ -1,8 +1,8 @@
 from flask import Flask, render_template, request
+from deep_translator import GoogleTranslator
 
 app = Flask(__name__)
 
-# Symptom rulebook: keyword -> (urgency, first-aid advice)
 SYMPTOM_RULES = {
     "chest pain": ("Red", "Seek emergency care immediately. Keep the person calm and seated upright."),
     "breathing difficulty": ("Red", "Seek emergency care immediately. Loosen tight clothing, keep person upright."),
@@ -16,6 +16,35 @@ SYMPTOM_RULES = {
     "cough": ("Green", "Stay hydrated, rest. See a doctor if cough persists more than a week."),
     "headache": ("Green", "Rest in a quiet, dark room. Stay hydrated. See a doctor if severe or persistent."),
 }
+
+HINDI_TO_ENGLISH_SYMPTOMS = {
+    "सीने में दर्द": "chest pain",
+    "बुखार": "fever",
+    "तेज बुखार": "high fever",
+    "खांसी": "cough",
+    "सांस लेने में तकलीफ": "breathing difficulty",
+    "खून बह रहा है": "bleeding",
+    "सांप ने काटा": "snake bite",
+    "पेट दर्द": "stomach pain",
+    "सिर दर्द": "headache",
+    "चोट": "injury",
+}
+
+def translate_to_english(text):
+    text_stripped = text.strip()
+    
+    if text_stripped in HINDI_TO_ENGLISH_SYMPTOMS:
+        return HINDI_TO_ENGLISH_SYMPTOMS[text_stripped]
+    
+    try:
+        translated = GoogleTranslator(source='auto', target='en').translate(text)
+        error_indicators = ["Error 500", "Server Error", "That's an error"]
+        if any(indicator in translated for indicator in error_indicators):
+            return text
+        return translated
+    except Exception as e:
+        print(f"Translation error: {e}")
+        return text
 
 def classify_symptom(text):
     text_lower = text.lower()
@@ -31,11 +60,13 @@ def home():
 @app.route('/submit', methods=['POST'])
 def submit():
     user_text = request.form.get('symptom_text')
-    matched_symptom, urgency, advice = classify_symptom(user_text)
+    translated_text = translate_to_english(user_text)
+    matched_symptom, urgency, advice = classify_symptom(translated_text)
     
     return render_template(
         'result.html',
         original_text=user_text,
+        translated_text=translated_text,
         matched_symptom=matched_symptom,
         urgency=urgency,
         advice=advice
