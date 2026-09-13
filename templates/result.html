@@ -3,12 +3,12 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Result - quickcareAI</title>
+    <title>Result - ArogyaAI</title>
     <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
 </head>
 <body>
     <div class="header">
-        <h1>🏥 quickcareAI</h1>
+        <h1>🏥 ArogyaAI</h1>
     </div>
 
     <div class="container">
@@ -20,21 +20,40 @@
                 {% else %}⚪
                 {% endif %}
             </span>
-            <span class="urgency-text">{{ urgency }}</span>
+            <span class="urgency-text">{{ urgency_label }}</span>
         </div>
 
-        <div class="info-row">
-            <span class="info-label">You said:</span>
-            <span>{{ original_text }}</span>
-        </div>
-        <div class="info-row">
-            <span class="info-label">Understood as:</span>
-            <span>{{ translated_text }}</span>
+        <p class="assessment-subtitle">Preliminary Triage Assessment</p>
+
+        <div class="section">
+            <h3>Symptoms identified</h3>
+            <p>• {{ matched_symptom or translated_text }}</p>
         </div>
 
-        <div class="advice-box">
-            <h3>First Aid Advice</h3>
-            <p>{{ advice }}</p>
+        <div class="section">
+            <h3>Possible causes</h3>
+            {% for cause in causes %}
+            <p>• {{ cause }}</p>
+            {% endfor %}
+        </div>
+
+        <div class="section reasoning-box">
+            <h3>Why this assessment?</h3>
+            <p>{{ reasoning }}</p>
+        </div>
+
+        <div class="section">
+            <h3>Recommended next steps</h3>
+            {% for step in next_steps %}
+            <p>✓ {{ step }}</p>
+            {% endfor %}
+        </div>
+
+        <div class="section warning-box">
+            <h3>⚠️ Seek medical attention if</h3>
+            {% for sign in warning_signs %}
+            <p>• {{ sign }}</p>
+            {% endfor %}
         </div>
 
         <a href="/" class="back-link">← Check Another Patient</a>
@@ -49,8 +68,8 @@
             <tr><td>Reported Symptom</td><td>{{ original_text }}</td></tr>
             <tr><td>Translated</td><td>{{ translated_text }}</td></tr>
             <tr><td>Matched Condition</td><td>{{ matched_symptom or "Not recognized" }}</td></tr>
-            <tr><td>Urgency</td><td class="urgency-{{ urgency|lower }}"><strong>{{ urgency }}</strong></td></tr>
-            <tr><td>First Aid Given</td><td>{{ advice }}</td></tr>
+            <tr><td>Urgency</td><td class="urgency-{{ urgency|lower }}"><strong>{{ urgency_label }}</strong></td></tr>
+            <tr><td>Recommended Steps</td><td>{{ advice }}</td></tr>
         </table>
         <button onclick="window.print()" class="print-btn">🖨️ Print Summary Slip</button>
     </div>
