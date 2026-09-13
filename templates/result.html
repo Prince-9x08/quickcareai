@@ -17,5 +17,20 @@
         
         <a href="/">← Try Again</a>
     </div>
+
+    <div class="summary-slip" id="summarySlip">
+        <h2>Doctor Summary Slip</h2>
+        <table>
+            <tr><td><strong>Patient Name:</strong></td><td>{{ patient_name }}</td></tr>
+            <tr><td><strong>Age:</strong></td><td>{{ patient_age }}</td></tr>
+            <tr><td><strong>Date/Time:</strong></td><td>{{ timestamp }}</td></tr>
+            <tr><td><strong>Reported Symptom (original):</strong></td><td>{{ original_text }}</td></tr>
+            <tr><td><strong>Translated Symptom:</strong></td><td>{{ translated_text }}</td></tr>
+            <tr><td><strong>Matched Condition:</strong></td><td>{{ matched_symptom or "Not recognized" }}</td></tr>
+            <tr><td><strong>Urgency Level:</strong></td><td class="urgency-{{ urgency|lower }}">{{ urgency }}</td></tr>
+            <tr><td><strong>First Aid Given:</strong></td><td>{{ advice }}</td></tr>
+        </table>
+        <button onclick="window.print()" class="print-btn">🖨️ Print Summary Slip</button>
+    </div>
 </body>
 </html>

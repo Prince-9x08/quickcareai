@@ -1,5 +1,6 @@
 from flask import Flask, render_template, request
 from deep_translator import GoogleTranslator
+from datetime import datetime
 
 app = Flask(__name__)
 
@@ -32,10 +33,8 @@ HINDI_TO_ENGLISH_SYMPTOMS = {
 
 def translate_to_english(text):
     text_stripped = text.strip()
-    
     if text_stripped in HINDI_TO_ENGLISH_SYMPTOMS:
         return HINDI_TO_ENGLISH_SYMPTOMS[text_stripped]
-    
     try:
         translated = GoogleTranslator(source='auto', target='en').translate(text)
         error_indicators = ["Error 500", "Server Error", "That's an error"]
@@ -59,17 +58,25 @@ def home():
 
 @app.route('/submit', methods=['POST'])
 def submit():
+    patient_name = request.form.get('patient_name', 'Not provided')
+    patient_age = request.form.get('patient_age', 'Not provided')
     user_text = request.form.get('symptom_text')
+    
     translated_text = translate_to_english(user_text)
     matched_symptom, urgency, advice = classify_symptom(translated_text)
     
+    timestamp = datetime.now().strftime("%d %b %Y, %I:%M %p")
+    
     return render_template(
         'result.html',
+        patient_name=patient_name,
+        patient_age=patient_age,
         original_text=user_text,
         translated_text=translated_text,
         matched_symptom=matched_symptom,
         urgency=urgency,
-        advice=advice
+        advice=advice,
+        timestamp=timestamp
     )
 
 if __name__ == '__main__':

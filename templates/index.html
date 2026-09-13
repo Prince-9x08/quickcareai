@@ -2,19 +2,31 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>quickcareai - Symptom Checker</title>
+    <title>ArogyaAI - Symptom Checker</title>
     <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
 </head>
 <body>
     <div class="container">
-        <h1>quickcareai</h1>
+        <h1>ArogyaAI</h1>
         <p>Describe your symptoms below</p>
         
         <form action="/submit" method="POST">
+            <input 
+                type="text" 
+                name="patient_name" 
+                placeholder="Patient Name"
+                required
+            >
+            <input 
+                type="number" 
+                name="patient_age" 
+                placeholder="Age"
+                required
+            >
             <textarea 
                 name="symptom_text" 
                 rows="5" 
-                placeholder="Type your symptoms here (any language)..."
+                placeholder="Type your symptoms here (Hindi or English)..."
                 required
             ></textarea>
             <br>

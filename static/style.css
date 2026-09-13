@@ -65,3 +65,70 @@ button:hover {
     padding: 10px;
     border-radius: 5px;
 }
+input[type="text"], input[type="number"] {
+    width: 100%;
+    padding: 10px;
+    font-size: 16px;
+    border-radius: 5px;
+    border: 1px solid #ccc;
+    margin-bottom: 10px;
+    box-sizing: border-box;
+}
+.summary-slip {
+    background: white;
+    padding: 25px;
+    border-radius: 10px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+    width: 500px;
+    margin: 20px auto;
+    border: 2px dashed #888;
+}
+
+.summary-slip table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 15px;
+}
+
+.summary-slip td {
+    padding: 8px;
+    border-bottom: 1px solid #eee;
+    text-align: left;
+    vertical-align: top;
+}
+
+.print-btn {
+    margin-top: 15px;
+    padding: 10px 20px;
+    background-color: #0984e3;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    font-size: 16px;
+    cursor: pointer;
+}
+
+.print-btn:hover {
+    background-color: #0769b5;
+}
+
+/* Hide everything except the summary slip when printing */
+@media print {
+    body * {
+        visibility: hidden;
+    }
+    .summary-slip, .summary-slip * {
+        visibility: visible;
+    }
+    .summary-slip {
+        position: absolute;
+        left: 0;
+        top: 0;
+        width: 100%;
+        border: none;
+        box-shadow: none;
+    }
+    .print-btn {
+        display: none;
+    }
+}
