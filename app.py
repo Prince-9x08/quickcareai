@@ -2,6 +2,8 @@ from flask import Flask, render_template, request
 from deep_translator import GoogleTranslator
 from datetime import datetime
 from difflib import get_close_matches
+import os
+import re
 
 app = Flask(__name__)
 
@@ -108,11 +110,12 @@ def classify_symptom(text):
     best_advice = None
     best_rank = 0
     
-    words = text_lower.split()
     symptom_keys = list(SYMPTOM_RULES.keys())
     
+    # Exact match with word boundaries (handles multi-word symptoms too)
     for symptom in symptom_keys:
-        if symptom in text_lower:
+        pattern = r'\b' + re.escape(symptom) + r'\b'
+        if re.search(pattern, text_lower):
             urgency, advice = SYMPTOM_RULES[symptom]
             rank = urgency_rank[urgency]
             if rank > best_rank:
@@ -121,7 +124,9 @@ def classify_symptom(text):
                 best_urgency = urgency
                 best_advice = advice
     
+    # Fuzzy match fallback, only if no exact match found
     if not best_match:
+        words = text_lower.split()
         for word in words:
             close = get_close_matches(word, symptom_keys, n=1, cutoff=0.75)
             if close:
@@ -137,7 +142,6 @@ def classify_symptom(text):
     if best_match:
         return best_match, best_urgency, best_advice
     return None, "Unknown", "Symptom not recognized. Please consult a health worker directly."
-@app.route('/', methods=['GET'])
 def home():
     return render_template('index.html')
 
@@ -165,4 +169,5 @@ def submit():
     )
 
 if __name__ == '__main__':
-    app.run(debug=True, host='0.0.0.0', port=5000)
+    port = int(os.environ.get('PORT', 5000))
+    app.run(debug=False, host='0.0.0.0', port=port)
