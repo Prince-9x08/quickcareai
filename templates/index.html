@@ -2,36 +2,51 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>ArogyaAI - Symptom Checker</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>quickcareAI - Symptom Checker</title>
     <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
 </head>
 <body>
+    <div class="header">
+        <h1>🏥 auickcareAI</h1>
+        <p class="tagline">Quick health triage for your community</p>
+    </div>
+
     <div class="container">
-        <h1>ArogyaAI</h1>
-        <p>Describe your symptoms below</p>
-        
         <form action="/submit" method="POST">
+            <label for="patient_name">Patient Name</label>
             <input 
                 type="text" 
+                id="patient_name"
                 name="patient_name" 
-                placeholder="Patient Name"
+                placeholder="e.g. Ramesh Kumar"
                 required
             >
+
+            <label for="patient_age">Age</label>
             <input 
                 type="number" 
+                id="patient_age"
                 name="patient_age" 
-                placeholder="Age"
+                placeholder="e.g. 35"
                 required
             >
+
+            <label for="symptom_text">Describe Symptoms (Hindi or English)</label>
             <textarea 
+                id="symptom_text"
                 name="symptom_text" 
-                rows="5" 
-                placeholder="Type your symptoms here (Hindi or English)..."
+                rows="4" 
+                placeholder="जैसे: बुखार, खांसी, सिर दर्द..."
                 required
             ></textarea>
-            <br>
-            <button type="submit">Check Symptoms</button>
+
+            <button type="submit" class="submit-btn">Check Symptoms →</button>
         </form>
+
+        <div class="example-hint">
+            <strong>Try:</strong> बुखार · खांसी · सीने में दर्द · उल्टी · चक्कर आना
+        </div>
     </div>
 </body>
 </html>

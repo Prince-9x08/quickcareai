@@ -1,6 +1,7 @@
 from flask import Flask, render_template, request
 from deep_translator import GoogleTranslator
 from datetime import datetime
+from difflib import get_close_matches
 
 app = Flask(__name__)
 
@@ -84,25 +85,58 @@ HINDI_TO_ENGLISH_SYMPTOMS = {
 
 def translate_to_english(text):
     text_stripped = text.strip()
+    
     if text_stripped in HINDI_TO_ENGLISH_SYMPTOMS:
         return HINDI_TO_ENGLISH_SYMPTOMS[text_stripped]
+    
     try:
         translated = GoogleTranslator(source='auto', target='en').translate(text)
         error_indicators = ["Error 500", "Server Error", "That's an error"]
         if any(indicator in translated for indicator in error_indicators):
             return text
         return translated
-    except Exception as e:
-        print(f"Translation error: {e}")
+    except Exception:
+        # Any translation failure (rate limit, network, etc.) - just use original text
         return text
 
 def classify_symptom(text):
     text_lower = text.lower()
-    for symptom, (urgency, advice) in SYMPTOM_RULES.items():
+    urgency_rank = {"Red": 3, "Yellow": 2, "Green": 1}
+    
+    best_match = None
+    best_urgency = None
+    best_advice = None
+    best_rank = 0
+    
+    words = text_lower.split()
+    symptom_keys = list(SYMPTOM_RULES.keys())
+    
+    for symptom in symptom_keys:
         if symptom in text_lower:
-            return symptom, urgency, advice
+            urgency, advice = SYMPTOM_RULES[symptom]
+            rank = urgency_rank[urgency]
+            if rank > best_rank:
+                best_rank = rank
+                best_match = symptom
+                best_urgency = urgency
+                best_advice = advice
+    
+    if not best_match:
+        for word in words:
+            close = get_close_matches(word, symptom_keys, n=1, cutoff=0.75)
+            if close:
+                symptom = close[0]
+                urgency, advice = SYMPTOM_RULES[symptom]
+                rank = urgency_rank[urgency]
+                if rank > best_rank:
+                    best_rank = rank
+                    best_match = symptom
+                    best_urgency = urgency
+                    best_advice = advice
+    
+    if best_match:
+        return best_match, best_urgency, best_advice
     return None, "Unknown", "Symptom not recognized. Please consult a health worker directly."
-
 @app.route('/', methods=['GET'])
 def home():
     return render_template('index.html')

@@ -2,33 +2,55 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Result - ArogyaAI</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Result - quickcareAI</title>
     <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
 </head>
 <body>
+    <div class="header">
+        <h1>🏥 ArogyaAI</h1>
+    </div>
+
     <div class="container">
-        <h1>Result</h1>
-        <p><strong>You said:</strong> {{ original_text }}</p>
-        <p><strong>Translated:</strong> {{ translated_text }}</p>
-        
-        <h2 class="urgency-{{ urgency|lower }}">{{ urgency }}</h2>
-        
-        <p><strong>First Aid Advice:</strong> {{ advice }}</p>
-        
-        <a href="/">← Try Again</a>
+        <div class="urgency-banner urgency-{{ urgency|lower }}">
+            <span class="urgency-icon">
+                {% if urgency == 'Red' %}🔴
+                {% elif urgency == 'Yellow' %}🟡
+                {% elif urgency == 'Green' %}🟢
+                {% else %}⚪
+                {% endif %}
+            </span>
+            <span class="urgency-text">{{ urgency }}</span>
+        </div>
+
+        <div class="info-row">
+            <span class="info-label">You said:</span>
+            <span>{{ original_text }}</span>
+        </div>
+        <div class="info-row">
+            <span class="info-label">Understood as:</span>
+            <span>{{ translated_text }}</span>
+        </div>
+
+        <div class="advice-box">
+            <h3>First Aid Advice</h3>
+            <p>{{ advice }}</p>
+        </div>
+
+        <a href="/" class="back-link">← Check Another Patient</a>
     </div>
 
     <div class="summary-slip" id="summarySlip">
-        <h2>Doctor Summary Slip</h2>
+        <h2>📋 Doctor Summary Slip</h2>
         <table>
-            <tr><td><strong>Patient Name:</strong></td><td>{{ patient_name }}</td></tr>
-            <tr><td><strong>Age:</strong></td><td>{{ patient_age }}</td></tr>
-            <tr><td><strong>Date/Time:</strong></td><td>{{ timestamp }}</td></tr>
-            <tr><td><strong>Reported Symptom (original):</strong></td><td>{{ original_text }}</td></tr>
-            <tr><td><strong>Translated Symptom:</strong></td><td>{{ translated_text }}</td></tr>
-            <tr><td><strong>Matched Condition:</strong></td><td>{{ matched_symptom or "Not recognized" }}</td></tr>
-            <tr><td><strong>Urgency Level:</strong></td><td class="urgency-{{ urgency|lower }}">{{ urgency }}</td></tr>
-            <tr><td><strong>First Aid Given:</strong></td><td>{{ advice }}</td></tr>
+            <tr><td>Patient Name</td><td>{{ patient_name }}</td></tr>
+            <tr><td>Age</td><td>{{ patient_age }}</td></tr>
+            <tr><td>Date/Time</td><td>{{ timestamp }}</td></tr>
+            <tr><td>Reported Symptom</td><td>{{ original_text }}</td></tr>
+            <tr><td>Translated</td><td>{{ translated_text }}</td></tr>
+            <tr><td>Matched Condition</td><td>{{ matched_symptom or "Not recognized" }}</td></tr>
+            <tr><td>Urgency</td><td class="urgency-{{ urgency|lower }}"><strong>{{ urgency }}</strong></td></tr>
+            <tr><td>First Aid Given</td><td>{{ advice }}</td></tr>
         </table>
         <button onclick="window.print()" class="print-btn">🖨️ Print Summary Slip</button>
     </div>
