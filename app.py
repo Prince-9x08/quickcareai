@@ -142,6 +142,8 @@ def classify_symptom(text):
     if best_match:
         return best_match, best_urgency, best_advice
     return None, "Unknown", "Symptom not recognized. Please consult a health worker directly."
+
+@app.route('/', methods=['GET'])
 def home():
     return render_template('index.html')
 
