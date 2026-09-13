@@ -1,0 +1,17 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Result - ArogyaAI</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+    <div class="container">
+        <h1>Result</h1>
+        <p><strong>You said:</strong> {{ original_text }}</p>
+        <p><strong>Output:</strong> {{ result }}</p>
+        
+        <a href="/">← Try Again</a>
+    </div>
+</body>
+</html>

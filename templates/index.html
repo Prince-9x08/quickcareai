@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>ArogyaAI - Symptom Checker</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+    <div class="container">
+        <h1>ArogyaAI</h1>
+        <p>Describe your symptoms below</p>
+        
+        <form action="/submit" method="POST">
+            <textarea 
+                name="symptom_text" 
+                rows="5" 
+                placeholder="Type your symptoms here (any language)..."
+                required
+            ></textarea>
+            <br>
+            <button type="submit">Check Symptoms</button>
+        </form>
+    </div>
+</body>
+</html>
