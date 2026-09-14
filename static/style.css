@@ -17,17 +17,17 @@ body {
 .header h1 {
     margin: 0;
     font-size: 32px;
-    color: #1a5f7a;
+    color: #26ace0;
 }
 
 .tagline {
-    color: #187f99;
+    color: #1f9fbe;
     margin-top: 5px;
     font-size: 15px;
 }
 
 .container {
-    background: #f4f8fb;
+    background: #dadbdb;
     padding: 25px;
     border-radius: 14px;
     box-shadow: 0 2px 12px rgba(0, 0, 0, 0.08);

@@ -225,6 +225,111 @@ SYMPTOM_RULES = {
         "next_steps": ["Clean with water", "Apply a bandage", "Keep the area dry"],
         "warning_signs": ["Signs of infection (redness, pus)", "Wound doesn't heal after a week", "Deep or gaping wound"]
     },
+        "ear pain": {
+        "urgency": "Yellow",
+        "causes": ["Ear infection", "Fluid buildup", "Foreign object or wax blockage"],
+        "reasoning": "Ear pain is often caused by infection and can affect hearing if untreated.",
+        "next_steps": ["Avoid inserting anything into the ear", "Use a warm compress for comfort", "Keep the ear dry"],
+        "warning_signs": ["Fluid or pus draining from ear", "Hearing loss", "High fever accompanying the pain"]
+    },
+    "toothache": {
+        "urgency": "Yellow",
+        "causes": ["Tooth decay", "Gum infection", "Dental abscess"],
+        "reasoning": "Dental pain often signals infection that can worsen without treatment.",
+        "next_steps": ["Rinse with warm salt water", "Avoid very hot or cold food", "See a dentist soon"],
+        "warning_signs": ["Swelling of face or jaw", "Fever", "Severe, worsening pain"]
+    },
+    "urinary problem": {
+        "urgency": "Yellow",
+        "causes": ["Urinary tract infection", "Dehydration", "Kidney-related issue"],
+        "reasoning": "Urinary symptoms often indicate infection and can worsen without treatment.",
+        "next_steps": ["Drink plenty of water", "Avoid holding urine for long periods", "Monitor for worsening symptoms"],
+        "warning_signs": ["Blood in urine", "Severe back or side pain", "Fever with chills"]
+    },
+    "burning urination": {
+        "urgency": "Yellow",
+        "causes": ["Urinary tract infection", "Dehydration"],
+        "reasoning": "Burning sensation during urination is commonly caused by infection.",
+        "next_steps": ["Drink plenty of water", "Avoid caffeine and irritants", "Monitor for worsening symptoms"],
+        "warning_signs": ["Blood in urine", "Fever with chills", "Severe lower back pain"]
+    },
+    "joint pain": {
+        "urgency": "Yellow",
+        "causes": ["Arthritis", "Injury or strain", "Viral infection"],
+        "reasoning": "Joint pain has many possible causes and usually benefits from rest and monitoring.",
+        "next_steps": ["Rest the affected joint", "Apply a cold or warm compress", "Avoid strenuous activity"],
+        "warning_signs": ["Joint appears swollen, red, or hot", "Sudden inability to move the joint", "Fever accompanying the pain"]
+    },
+    "swelling": {
+        "urgency": "Yellow",
+        "causes": ["Injury", "Allergic reaction", "Infection"],
+        "reasoning": "Swelling can indicate various underlying issues requiring monitoring.",
+        "next_steps": ["Elevate the affected area", "Apply a cold compress", "Avoid putting weight or pressure on it"],
+        "warning_signs": ["Rapid or severe swelling", "Difficulty breathing (if face/throat)", "Accompanied by fever"]
+    },
+    "allergic reaction": {
+        "urgency": "Red",
+        "causes": ["Food allergy", "Insect sting", "Medication reaction"],
+        "reasoning": "Allergic reactions can escalate quickly and become life-threatening.",
+        "next_steps": ["Remove the triggering substance if known", "Seek emergency care if severe", "Monitor breathing closely"],
+        "warning_signs": ["Swelling of face, lips, or throat", "Difficulty breathing", "Widespread rash or hives"]
+    },
+    "food poisoning": {
+        "urgency": "Yellow",
+        "causes": ["Contaminated food or water", "Bacterial or viral infection"],
+        "reasoning": "Food poisoning usually resolves on its own but can cause dehydration.",
+        "next_steps": ["Stay hydrated with ORS or water", "Rest", "Avoid solid food until symptoms ease"],
+        "warning_signs": ["Persistent vomiting", "Blood in vomit or stool", "Signs of severe dehydration"]
+    },
+    "anxiety": {
+        "urgency": "Green",
+        "causes": ["Stress", "Overexertion", "Situational anxiety"],
+        "reasoning": "Mild anxiety symptoms are common and often improve with rest and calming techniques.",
+        "next_steps": ["Practice slow, deep breathing", "Rest in a calm environment", "Talk to someone you trust"],
+        "warning_signs": ["Chest pain or rapid heartbeat", "Difficulty breathing", "Persistent or worsening distress"]
+    },
+    "insomnia": {
+        "urgency": "Green",
+        "causes": ["Stress", "Irregular sleep schedule", "Excessive screen time"],
+        "reasoning": "Occasional difficulty sleeping is common and often improves with better sleep habits.",
+        "next_steps": ["Maintain a consistent sleep schedule", "Avoid screens before bed", "Limit caffeine in the evening"],
+        "warning_signs": ["Persists more than 2 weeks", "Accompanied by significant fatigue", "Affects daily functioning"]
+    },
+    "nasal congestion": {
+        "urgency": "Green",
+        "causes": ["Common cold", "Allergies", "Sinus irritation"],
+        "reasoning": "Nasal congestion is usually mild and resolves with basic home care.",
+        "next_steps": ["Stay hydrated", "Use steam inhalation", "Rest"],
+        "warning_signs": ["Persists more than 10 days", "Thick, discolored discharge with fever", "Facial pain or pressure"]
+    },
+    "eye pain": {
+        "urgency": "Yellow",
+        "causes": ["Eye strain", "Infection", "Foreign object"],
+        "reasoning": "Eye pain can indicate infection or irritation requiring care.",
+        "next_steps": ["Avoid rubbing the eye", "Rest the eyes from screens", "Keep the area clean"],
+        "warning_signs": ["Vision changes", "Severe pain", "Sensitivity to light"]
+    },
+    "back pain": {
+        "urgency": "Yellow",
+        "causes": ["Muscle strain", "Poor posture", "Overexertion"],
+        "reasoning": "Back pain is often related to strain and usually improves with rest.",
+        "next_steps": ["Rest and avoid heavy lifting", "Apply a warm compress", "Maintain gentle movement"],
+        "warning_signs": ["Numbness or weakness in legs", "Loss of bladder or bowel control", "Pain after a fall or injury"]
+    },
+    "weakness": {
+        "urgency": "Yellow",
+        "causes": ["Anemia", "Dehydration", "Underlying infection"],
+        "reasoning": "General weakness can indicate several underlying conditions needing evaluation.",
+        "next_steps": ["Rest and stay hydrated", "Ensure adequate nutrition", "Monitor for other symptoms"],
+        "warning_signs": ["Sudden onset weakness on one side", "Difficulty speaking", "Loss of consciousness"]
+    },
+    "loss of appetite": {
+        "urgency": "Green",
+        "causes": ["Mild illness", "Stress", "Minor digestive upset"],
+        "reasoning": "Temporary loss of appetite is common with minor illness and usually resolves quickly.",
+        "next_steps": ["Eat small, light meals", "Stay hydrated", "Monitor for other symptoms"],
+        "warning_signs": ["Persists more than a week", "Significant weight loss", "Accompanied by persistent vomiting"]
+    },
 }
 HINDI_TO_ENGLISH_SYMPTOMS = {
     # Red
