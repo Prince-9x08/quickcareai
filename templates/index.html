@@ -6,6 +6,52 @@
     <title>quickcareAI - Symptom Checker</title>
     <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
 </head>
+<script>
+    const micBtn = document.getElementById('micBtn');
+    const micStatus = document.getElementById('micStatus');
+    const symptomText = document.getElementById('symptom_text');
+
+    if ('webkitSpeechRecognition' in window || 'SpeechRecognition' in window) {
+        const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+        const recognition = new SpeechRecognition();
+        recognition.lang = 'hi-IN'; // Hindi (India) - change to 'en-IN' for English
+        recognition.interimResults = false;
+        recognition.maxAlternatives = 1;
+
+        let isListening = false;
+
+        micBtn.addEventListener('click', function() {
+            if (!isListening) {
+                recognition.start();
+                isListening = true;
+                micBtn.classList.add('listening');
+                micStatus.textContent = '🎙️ Listening... speak now';
+            }
+        });
+
+        recognition.onresult = function(event) {
+            const transcript = event.results[0][0].transcript;
+            symptomText.value = symptomText.value 
+                ? symptomText.value + ' ' + transcript 
+                : transcript;
+            micStatus.textContent = '✓ Got it!';
+            setTimeout(() => { micStatus.textContent = ''; }, 2000);
+        };
+
+        recognition.onerror = function(event) {
+            micStatus.textContent = '⚠️ Could not hear you, please try again or type instead';
+            setTimeout(() => { micStatus.textContent = ''; }, 3000);
+        };
+
+        recognition.onend = function() {
+            isListening = false;
+            micBtn.classList.remove('listening');
+        };
+    } else {
+        // Browser doesn't support voice input - hide the mic button entirely
+        micBtn.style.display = 'none';
+    }
+</script>
 <body>
     <div class="header">
         <h1>🏥 quickcareAI</h1>
@@ -33,14 +79,18 @@
                 required
             >
 
-            <label for="symptom_text">Describe Symptoms (लक्षण) (Hindi or English)</label>
-            <textarea 
-                id="symptom_text"
-                name="symptom_text" 
-                rows="4" 
-                placeholder="जैसे: बुखार, खांसी, सिर दर्द..."
-                required
-            ></textarea>
+            <label for="symptom_text">Describe Symptoms (Hindi or English)</label>
+<div class="textarea-wrapper">
+    <textarea 
+        id="symptom_text"
+        name="symptom_text" 
+        rows="4" 
+        placeholder="जैसे: बुखार, खांसी, सिर दर्द..."
+        required
+    ></textarea>
+    <button type="button" id="micBtn" class="mic-btn" title="Speak your symptoms">🎤</button>
+</div>
+<p id="micStatus" class="mic-status"></p>
 
             <button type="submit" class="submit-btn" id="submitBtn">Check Symptoms →</button>
         </form>

@@ -396,6 +396,7 @@ def classify_symptom(text):
     
     symptom_keys = list(SYMPTOM_RULES.keys())
     
+    # Check ALL symptoms, keep the one with highest urgency
     for symptom in symptom_keys:
         pattern = r'\b' + re.escape(symptom) + r'\b'
         if re.search(pattern, text_lower):
@@ -406,6 +407,7 @@ def classify_symptom(text):
                 best_match = symptom
                 best_data = data
     
+    # Fuzzy match fallback only if nothing matched exactly
     if not best_match:
         words = text_lower.split()
         for word in words:
@@ -421,6 +423,7 @@ def classify_symptom(text):
     
     if best_match:
         return best_match, best_data
+    
     return None, {
         "urgency": "Unknown",
         "causes": ["Not enough information to determine possible causes"],

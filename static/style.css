@@ -333,3 +333,49 @@ input:focus, textarea:focus {
     font-weight: 600;
     font-size: 16px;
 }
+.textarea-wrapper {
+    position: relative;
+}
+
+.textarea-wrapper textarea {
+    padding-right: 50px;
+}
+
+.mic-btn {
+    position: absolute;
+    right: 10px;
+    bottom: 10px;
+    width: 36px;
+    height: 36px;
+    border-radius: 50%;
+    border: none;
+    background-color: #1a5f7a;
+    color: white;
+    font-size: 16px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.mic-btn:hover {
+    background-color: #144a5f;
+}
+
+.mic-btn.listening {
+    background-color: #dc2626;
+    animation: pulse 1s infinite;
+}
+
+@keyframes pulse {
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0.6; }
+}
+
+.mic-status {
+    text-align: center;
+    font-size: 13px;
+    color: #1a5f7a;
+    min-height: 18px;
+    margin-top: 5px;
+}
