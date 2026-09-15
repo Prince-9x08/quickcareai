@@ -371,65 +371,209 @@ HINDI_TO_ENGLISH_SYMPTOMS = {
 }
 
 def translate_to_english(text):
-    text_stripped = text.strip()
-    
-    if text_stripped in HINDI_TO_ENGLISH_SYMPTOMS:
-        return HINDI_TO_ENGLISH_SYMPTOMS[text_stripped]
-    
-    try:
-        translated = GoogleTranslator(source='auto', target='en').translate(text)
-        error_indicators = ["Error 500", "Server Error", "That's an error"]
-        if any(indicator in translated for indicator in error_indicators):
-            return text
-        return translated
-    except Exception:
-        # Any translation failure (rate limit, network, etc.) - just use original text
-        return text
+    """
+    Convert Hindi symptom phrases to English.
 
-def classify_symptom(text):
+    First check our own Hindi symptom dictionary.
+    This is more reliable for known medical symptoms
+    than depending completely on online translation.
+    """
+
+    if not text:
+        return ""
+
+    text_stripped = text.strip()
+    text_lower = text_stripped.lower()
+
+    # -----------------------------------------
+    # 1. Check Hindi symptom phrases
+    # -----------------------------------------
+    # Check longer phrases first.
+    # Example:
+    # "तेज बुखार" should be checked before "बुखार"
+
+    hindi_phrases = sorted(
+        HINDI_TO_ENGLISH_SYMPTOMS.keys(),
+        key=len,
+        reverse=True
+    )
+
+    for hindi_phrase in hindi_phrases:
+
+        if hindi_phrase in text_stripped:
+            return HINDI_TO_ENGLISH_SYMPTOMS[hindi_phrase]
+
+    # -----------------------------------------
+    # 2. Try Google translation
+    # -----------------------------------------
+
+    try:
+
+        translated = GoogleTranslator(
+            source='auto',
+            target='en'
+        ).translate(text)
+
+        if translated:
+            return translated
+
+    except Exception as e:
+
+        print("Translation error:", e)
+
+    # -----------------------------------------
+    # 3. If translation fails,
+    #    return original text
+    # -----------------------------------------
+
+    return text
+
+def classify_symptom(text, original_text=""):
+    """
+    Identify the most urgent symptom from the user's input.
+
+    The function checks:
+    1. English symptom keywords
+    2. Hindi symptom keywords
+    3. Fuzzy English matching
+
+    If multiple symptoms are present,
+    the highest urgency symptom wins.
+    """
+
+    if not text:
+        text = ""
+
+    if not original_text:
+        original_text = text
+
     text_lower = text.lower()
-    urgency_rank = {"Red": 3, "Yellow": 2, "Green": 1}
-    
+    original_lower = original_text.lower()
+
+    urgency_rank = {
+        "Red": 3,
+        "Yellow": 2,
+        "Green": 1
+    }
+
     best_match = None
     best_data = None
     best_rank = 0
-    
-    symptom_keys = list(SYMPTOM_RULES.keys())
-    
-    # Check ALL symptoms, keep the one with highest urgency
-    for symptom in symptom_keys:
-        pattern = r'\b' + re.escape(symptom) + r'\b'
+
+
+    # ==================================================
+    # 1. CHECK ENGLISH SYMPTOMS
+    # ==================================================
+
+    for symptom, data in SYMPTOM_RULES.items():
+
+        # Use word boundaries for English phrases
+        pattern = r'\b' + re.escape(symptom.lower()) + r'\b'
+
         if re.search(pattern, text_lower):
-            data = SYMPTOM_RULES[symptom]
+
             rank = urgency_rank[data["urgency"]]
+
             if rank > best_rank:
+
                 best_rank = rank
                 best_match = symptom
                 best_data = data
-    
-    # Fuzzy match fallback only if nothing matched exactly
+
+
+    # ==================================================
+    # 2. CHECK HINDI SYMPTOMS DIRECTLY
+    # ==================================================
+
+    # Longer Hindi phrases first
+    hindi_phrases = sorted(
+        HINDI_TO_ENGLISH_SYMPTOMS.items(),
+        key=lambda item: len(item[0]),
+        reverse=True
+    )
+
+    for hindi_phrase, english_symptom in hindi_phrases:
+
+        if hindi_phrase in original_lower:
+
+            data = SYMPTOM_RULES.get(english_symptom)
+
+            if data:
+
+                rank = urgency_rank[data["urgency"]]
+
+                if rank > best_rank:
+
+                    best_rank = rank
+                    best_match = english_symptom
+                    best_data = data
+
+
+    # ==================================================
+    # 3. FUZZY ENGLISH MATCH
+    # ==================================================
+
     if not best_match:
+
         words = text_lower.split()
+
+        symptom_keys = list(SYMPTOM_RULES.keys())
+
         for word in words:
-            close = get_close_matches(word, symptom_keys, n=1, cutoff=0.75)
+
+            close = get_close_matches(
+                word,
+                symptom_keys,
+                n=1,
+                cutoff=0.75
+            )
+
             if close:
+
                 symptom = close[0]
                 data = SYMPTOM_RULES[symptom]
+
                 rank = urgency_rank[data["urgency"]]
+
                 if rank > best_rank:
+
                     best_rank = rank
                     best_match = symptom
                     best_data = data
-    
+
+
+    # ==================================================
+    # 4. RETURN RESULT
+    # ==================================================
+
     if best_match:
+
         return best_match, best_data
-    
+
+
+    # ==================================================
+    # 5. NOTHING RECOGNIZED
+    # ==================================================
+
     return None, {
         "urgency": "Unknown",
-        "causes": ["Not enough information to determine possible causes"],
-        "reasoning": "This symptom description wasn't recognized by the system.",
-        "next_steps": ["Consult a health worker directly for proper assessment"],
-        "warning_signs": ["Any worsening of symptoms"]
+
+        "causes": [
+            "Not enough information to determine possible causes"
+        ],
+
+        "reasoning": (
+            "The symptom description could not be "
+            "matched to a known symptom category."
+        ),
+
+        "next_steps": [
+            "Consult a health worker directly for proper assessment"
+        ],
+
+        "warning_signs": [
+            "Any worsening of symptoms"
+        ]
     }
 
 @app.route('/', methods=['GET'])
@@ -454,7 +598,11 @@ def submit():
     user_text = request.form.get('symptom_text')
     
     translated_text = translate_to_english(user_text)
-    matched_symptom, data = classify_symptom(translated_text)
+    matched_symptom, data = classify_symptom(
+    translated_text,
+    user_text
+)
+
     
     timestamp = datetime.now().strftime("%d %b %Y, %I:%M %p")
     

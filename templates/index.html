@@ -1,117 +1,154 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
     <title>quickcareAI - Symptom Checker</title>
+
+    <!-- CSS -->
     <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
 </head>
-<script>
-    const micBtn = document.getElementById('micBtn');
-    const micStatus = document.getElementById('micStatus');
-    const symptomText = document.getElementById('symptom_text');
 
-    if ('webkitSpeechRecognition' in window || 'SpeechRecognition' in window) {
-        const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
-        const recognition = new SpeechRecognition();
-        recognition.lang = 'hi-IN'; // Hindi (India) - change to 'en-IN' for English
-        recognition.interimResults = false;
-        recognition.maxAlternatives = 1;
-
-        let isListening = false;
-
-        micBtn.addEventListener('click', function() {
-            if (!isListening) {
-                recognition.start();
-                isListening = true;
-                micBtn.classList.add('listening');
-                micStatus.textContent = '🎙️ Listening... speak now';
-            }
-        });
-
-        recognition.onresult = function(event) {
-            const transcript = event.results[0][0].transcript;
-            symptomText.value = symptomText.value 
-                ? symptomText.value + ' ' + transcript 
-                : transcript;
-            micStatus.textContent = '✓ Got it!';
-            setTimeout(() => { micStatus.textContent = ''; }, 2000);
-        };
-
-        recognition.onerror = function(event) {
-            micStatus.textContent = '⚠️ Could not hear you, please try again or type instead';
-            setTimeout(() => { micStatus.textContent = ''; }, 3000);
-        };
-
-        recognition.onend = function() {
-            isListening = false;
-            micBtn.classList.remove('listening');
-        };
-    } else {
-        // Browser doesn't support voice input - hide the mic button entirely
-        micBtn.style.display = 'none';
-    }
-</script>
 <body>
-    <div class="header">
-        <h1>🏥 quickcareAI</h1>
-        <p class="tagline">Quick health triage for your community</p>
-    </div>
 
-    <div class="container">
+    <!-- =========================
+         HEADER
+    ========================== -->
+    <header class="header">
+        <h1>🏥 quickcareAI</h1>
+        <p class="tagline">
+            Quick health triage for your community
+        </p>
+    </header>
+
+
+    <!-- =========================
+         MAIN CONTAINER
+    ========================== -->
+    <main class="container">
+
         <form action="/submit" method="POST" id="symptomForm">
-            <label for="patient_name">Patient Name</label>
-            <input 
-                type="text" 
+
+            <!-- Patient Name -->
+            <label for="patient_name">
+                Patient Name
+            </label>
+
+            <input
+                type="text"
                 id="patient_name"
-                name="patient_name" 
+                name="patient_name"
                 placeholder="e.g. Ramesh Kumar (optional)"
             >
 
-            <label for="patient_age">Age</label>
-            <input 
-                type="number" 
+
+            <!-- Patient Age -->
+            <label for="patient_age">
+                Age
+            </label>
+
+            <input
+                type="number"
                 id="patient_age"
-                name="patient_age" 
+                name="patient_age"
                 placeholder="e.g. 35"
                 min="0"
                 max="100"
                 required
             >
 
-            <label for="symptom_text">Describe Symptoms (Hindi or English)</label>
-<div class="textarea-wrapper">
-    <textarea 
-        id="symptom_text"
-        name="symptom_text" 
-        rows="4" 
-        placeholder="जैसे: बुखार, खांसी, सिर दर्द..."
-        required
-    ></textarea>
-    <button type="button" id="micBtn" class="mic-btn" title="Speak your symptoms">🎤</button>
-</div>
-<p id="micStatus" class="mic-status"></p>
 
-            <button type="submit" class="submit-btn" id="submitBtn">Check Symptoms →</button>
+            <!-- Symptoms -->
+            <label for="symptom_text">
+                Describe Symptoms (Hindi or English)
+            </label>
+
+            <div class="textarea-wrapper">
+
+                <textarea
+                    id="symptom_text"
+                    name="symptom_text"
+                    rows="4"
+                    placeholder="जैसे: बुखार, खांसी, सिर दर्द..."
+                    required
+                ></textarea>
+
+                <!-- Microphone Button -->
+                <button
+                    type="button"
+                    id="micBtn"
+                    class="mic-btn"
+                    title="Speak your symptoms"
+                    aria-label="Speak your symptoms"
+                >
+                    🎤
+                </button>
+
+            </div>
+
+
+            <!-- Voice Status -->
+            <p
+                id="micStatus"
+                class="mic-status"
+                aria-live="polite"
+            ></p>
+
+
+            <!-- Submit -->
+            <button
+                type="submit"
+                class="submit-btn"
+                id="submitBtn"
+            >
+                Check Symptoms →
+            </button>
+
         </form>
 
+
+        <!-- Example Symptoms -->
         <div class="example-hint">
-            <strong>Try:</strong> बुखार · खांसी · सीने में दर्द · उल्टी · चक्कर आना
-        </div>
-    </div>
 
-    <div class="loading-overlay" id="loadingOverlay">
+            <strong>Try:</strong>
+
+            बुखार · खांसी · सीने में दर्द ·
+            उल्टी · चक्कर आना
+
+        </div>
+
+    </main>
+
+
+    <!-- =========================
+         LOADING OVERLAY
+    ========================== -->
+    <div
+        class="loading-overlay"
+        id="loadingOverlay"
+    >
+
         <div class="loading-box">
+
             <div class="spinner"></div>
-            <p>Analyzing symptoms...</p>
+
+            <p>
+                Analyzing symptoms...
+            </p>
+
         </div>
+
     </div>
 
-    <script>
-        document.getElementById('symptomForm').addEventListener('submit', function() {
-            document.getElementById('loadingOverlay').style.display = 'flex';
-            document.getElementById('submitBtn').disabled = true;
-        });
-    </script>
+
+    <!-- =========================
+         JAVASCRIPT
+    ========================== -->
+
+    <script src="{{ url_for('static', filename='script.js') }}"></script>
+
 </body>
+
 </html>
